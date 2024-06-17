@@ -1,11 +1,12 @@
 <?php
 $servername = "localhost";
 $username = "root";
-$password = "root";
-$dbname = "mk_health";
+$password = "";
+$dbname = "mk_healt";
+$port = 3307;
 
 // Crear conexión
-$conn = new mysqli($servername, $username, $password, $dbname);
+$conn = new mysqli($servername, $username, $password, $dbname, $port);
 
 // Verificar conexión
 if ($conn->connect_error) {
@@ -13,28 +14,22 @@ if ($conn->connect_error) {
 }
 
 // Asegurarse de que todos los datos necesarios están presentes
-if (isset($_POST['nombre'], $_POST['correo'], $_POST['telefono'], $_POST['cp_negocio'], $_POST['tipo_negocio'], $_POST['puesto'])) {
-    // Imprimir los datos recibidos para verificar
-    echo '<pre>';
-    var_dump($_POST);
-    echo '</pre>';
-    exit;  // Detener la ejecución para revisar los datos
-
+if (isset($_POST['nombre'], $_POST['correo'], $_POST['telefono'], $_POST['cpNegocio'], $_POST['TipoNegocio'], $_POST['puestoOcupa'])) {
     $nombre = $conn->real_escape_string($_POST['nombre']);
     $correo = $conn->real_escape_string($_POST['correo']);
     $telefono = $conn->real_escape_string($_POST['telefono']);
-    $cp_negocio = $conn->real_escape_string($_POST['cp_negocio']);
-    $tipo_negocio = $conn->real_escape_string($_POST['tipo_negocio']);
-    $puesto = $conn->real_escape_string($_POST['puesto']);
+    $cpNegocio = $conn->real_escape_string($_POST['cpNegocio']);
+    $TipoNegocio = $conn->real_escape_string($_POST['TipoNegocio']);
+    $puestoOcupa = $conn->real_escape_string($_POST['puestoOcupa']);
 
-    $sql = "INSERT INTO registros (nombre, correo, telefono, cp_negocio, tipo_negocio, puesto) VALUES (?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO mk_form (nombre, correo, telefono, cpNegocio, TipoNegocio, puestoOcupa) VALUES (?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
 
     if ($stmt === false) {
         die('MySQL prepare error: ' . $conn->error);
     }
 
-    $stmt->bind_param('ssssss', $nombre, $correo, $telefono, $cp_negocio, $tipo_negocio, $puesto);
+    $stmt->bind_param('ssssss', $nombre, $correo, $telefono, $cpNegocio, $TipoNegocio, $puestoOcupa);
 
     if ($stmt->execute()) {
         echo "Nuevo registro creado exitosamente";
